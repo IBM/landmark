@@ -1,21 +1,19 @@
-= Solution for Leader chart approach with Helm Charts in Openshift
+= Validation for Leader chart approach with Helm Charts in Openshift
 
-* <<preparation, Preparation>>
+* <<_preparation, Preparation>>
 ** <<create-the-docker-image-for-landmark-microservice, Create the Docker image for Landmark Microservice>>
 * <<leader-helm-chart-setup,  Leader Helm chart setup>>
-* <<validation-and-more, Validation and more>>
 * <<compatibility,Compatibility>>
 * <<license,License>>
 
 All the below commands will be executed in a terminal window.
 
 === Preparation
-
-Assuming that you already clone the landmark project, execute the following:
+Assuming that you already cloned the landmark project, please execute the following:
 
 [source, bash, subs="normal,attributes"]
 ----
-$ git checkout solution/leader-chart-lab
+$ git checkout validation/leader-chart-lab
 $ git pull
 ----
 
@@ -29,7 +27,6 @@ Check if you already have the _dev_ project:
 ----
 $ oc get project
 $ oc new-project dev
-$ oc project dev
 ----
 
 The landmark microservice will persist its data into a database, in this case a PostgreSQL database instance.
@@ -46,12 +43,11 @@ $ helm repo add bitnami https://charts.bitnami.com/bitnami
 ----
 
 ==== Create the Docker image for Landmark Microservice
-Clone the repository https://github.com/ammbra/landmark[https://github.com/ammbra/landmark]:
-
+Clone the repository https://github.com/ammbra/landmark[https://github.com/ammbra/landmark].
 [source, bash, subs="normal,attributes"]
 ----
 $ git clone https://github.com/ammbra/landmark
-$ git checkout solution/leader-chart-lab
+$ git checkout validation/leader-chart-lab
 $ git pull
 ----
 
@@ -72,7 +68,7 @@ $ docker push localhost:5000/quarkus/landmark:1.0
 ----
 
 === Leader Helm chart setup
-Observe the json schema used to validate the charts.
+Observe the JSON schema used to validate the charts.
 Install your charts in your current project:
 
 [source, bash, subs="normal,attributes"]
@@ -88,12 +84,9 @@ Go in a browser window and copy-paste http://localhost:8080/api/museum/ams
 
 *Congratulations*, you found a landmark!
 
-=== Validation and more
-
-Looking to validate your charts? Checkout the validation branch: https://github.com/ammbra/landmark/tree/validation/leader-chart-lab
 
 |===
-|https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmark/tree/feature/chart-per-service-lab[Navigate to previous section] | https://github.com/ammbra/visitor[Navigate to next section]
+|https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmark/tree/solution/leader-chart-lab[Navigate to previous section] | https://github.com/ammbra/visitor[Navigate to next section]
 |===
 
 '''
