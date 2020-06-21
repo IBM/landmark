@@ -1,31 +1,19 @@
-= Solution for chart per service approach with Helm Charts in Openshift
+= Validation for chart per service approach with Helm Charts in Openshift
 
 * <<preparation, Preparation>>
 * <<helm-chart-setup-for-the-microservice, Helm chart setup for the microservice >>
 ** <<replicate-the-installation-in-qa-project, Replicate the installation in qa project>>
-* <<validation-and-more_, Validation and more>>
 * <<compatibility,Compatibility>>
 * <<license,License>>
-
-Use a Helm chart per microservice approach if you seek to achieve flexible, simple versioning and low complexity charts to package your application.
-Be careful, this technique might bring:
-
-• huge amount of duplication
-• difficulty to keep consistent many templates
-• hardship to introduce global changes
-
-**Goal of this section: deploy the landmark microservice using Helm charts.
-**
 
 All the below commands will be executed in a terminal window.
 
 === Preparation
-
-Assuming that you already cloned the landmark project, execute the following:
+Assuming that you already cloned the landmark project, please execute the following:
 
 [source, bash, subs="normal,attributes"]
 ----
-$ git checkout solution/chart-per-service-lab
+$ git checkout validation/chart-per-service-lab
 $ git pull
 ----
 
@@ -106,19 +94,15 @@ $ helm status landmark-db
 ----
 
 ====== Step2
-Duplicate the _values.yaml_ and rename it to _values.qa.yaml_.
-Change the NodePort value in _values.qa.yaml_ to 31126.
 Install the charts:
 [source, bash, subs="normal,attributes"]
 ----
-$ helm install simple ./chart/landmark --values ./chart/landmark/values.qa.yaml
+$ helm install simple ./chart/landmark --values ./landmark/values.qa.yaml
 $ helm status simple
 $ kubectl get ns
-$ kubectl get svc
 $ kubectl port-forward --namespace qa svc/simple-landmark 8080
 ----
 Go in a browser window and copy-paste http://localhost:8080/api/museum/museum
-
 *Congratulations*, you found a landmark and replicated deployment process accros environments!
 
 In order to switch back to project dev, use the below command:
@@ -126,12 +110,6 @@ In order to switch back to project dev, use the below command:
 ----
 $ oc project dev
 ----
-
-=== Validation and more
-
-Looking to validate your charts? 
-Checkout the validation branch: https://github.com/ammbra/landmark/tree/validation/chart-per-service-lab
-
 
 |===
 |https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmark[Navigate to previous section] | https://github.com/ammbra/landmark/tree/feature/leader-chart-lab[Navigate to next section]
