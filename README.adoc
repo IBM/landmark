@@ -1,0 +1,309 @@
+= Chart per service approach with Helm Charts in Openshift
+
+* <<preparation, Preparation>>
+* <<helm-chart-setup-for-the-microservice, Helm chart setup for the microservice >>
+* <<install-leader-chart-for-landmark-microservice, Install leader chart for Landmark microservice >>
+** <<create-the-docker-image-for-landmark-microservice, Create the Docker image for Landmark Microservice>>
+** <<create-the-helm-charts-for-landmark-microservice, Create the Helm charts for Landmark Microservice >>
+** <<modify-values-yaml-file, Modify values.yaml file>>
+*** <<change-the-docker-image-values, Change the Docker image values>>
+*** <<add-the-posgresql-details, Add the PosgreSQL details>>
+*** <<configure-the-health-endpoints,Configure the health endpoints>>
+*** <<modify-the-service-values, Modify the service values>>
+** <<modify-the-template-associated-with-deployment, Modify the template associated with Deployment>>
+*** <<modify-the-docker-image-template, Modify the Docker image template>>
+*** <<add-the-postgresql-environment, Add the PostgreSQL environment>>
+*** <<configure-the-health-endpoints, Configure the health endpoints>>
+** <<modify-the-template-associated-to-the-service, Modify the template associated to the Service >>
+** <<work-with-your-modified-charts, Work with your modified charts>>
+*** <<replicate-the-installation-in-qa-project, Replicate the installation in qa project>>
+* <<solution-and-more, Solution and more>>
+* <<compatibility,Compatibility>>
+* <<license,License>>
+
+Use a Helm chart per microservice approach if you seek to achieve flexible, simple versioning and low complexity charts to package your application.
+Be careful, this technique might bring:
+
+• huge amount of duplication
+• difficulty to keep consistent many templates
+• hardship to introduce global changes
+
+**Goal of this section: deploy the landmark microservice using Helm charts.
+**
+
+All the below commands will be executed in a terminal window.
+
+=== Preparation
+
+To login to the OpenShift cluster from the Terminal run:
+
+[source, bash, subs="normal,attributes"]
+----
+$ oc login -u kubeadmin -p YOUR_SECRET_PASSWORD https://api.crc.testing:6443
+----
+Check if you already have the _dev_ project:
+----
+$ oc get project
+$ oc new-project dev
+----
+
+The landmark microservice will persist its data into a database, in this case a PostgreSQL database instance.
+
+In order to install the database, the PostgreSQL Helm Charts will be used. Check if the Helm repo https://charts.bitnami.com/bitnami[https://charts.bitnami.com/bitnami] is added to your existing list:
+[source, bash, subs="normal,attributes"]
+----
+$ helm repo list
+----
+If the repo is not there, please run the following set of commands:
+[source, bash, subs="normal,attributes"]
+----
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+----
+
+Setup the database instance with Helm, using the following command:
+
+[source, bash, subs="normal,attributes"]
+----
+$ helm install landmark-db \
+--set postgresqlUsername=landmark-default,postgresqlPassword=postgres,postgresqlDatabase=landmark,persistence.enabled=false \
+stable/postgresql
+$ helm status landmark-db
+----
+Validate the installation via:
+
+[source, bash, subs="normal,attributes"]
+----
+$ helm list
+$ helm get all landmark-db
+----
+
+=== Helm chart setup for the microservice
+Clone the repository https://github.com/ammbra/landmark[https://github.com/ammbra/landmark].
+Try to build the project locally using <<Run-Landmark-Microservice.adoc#, Run-Landmark-Microservice.adoc>>.
+
+==== Create the Docker image for Landmark Microservice
+Make sure that you are under root folder of the clone repository (_landmark_) and run:
+[source, bash, subs="normal,attributes"]
+----
+$ mvn package
+----
+Then, build the image with:
+[source, bash, subs="normal,attributes"]
+----
+$ docker run -d -p 5000:5000 --restart=always --name registry registry:2docker run -d -p 5000:5000 --restart=always --name registry registry:2
+$ docker build -f src/main/docker/Dockerfile.jvm -t quarkus/landmark:1.0 .
+$ docker tag quarkus/landmark:1.0 localhost:5000/quarkus/landmark:1.0
+$ docker push localhost:5000/quarkus/landmark:1.0
+----
+
+==== Create the Helm charts for Landmark Microservice
+
+Make sure that you are under root folder of the clone repository (_landmark_) and run:
+[source, bash, subs="normal,attributes"]
+----
+$ cd chart
+$ helm create landmark
+----
+==== Modify *_values.yaml_* file
+Go to the newly created charts and find the *values.yaml* file.
+You can use vim or your favorite IDE to edit its values.
+[source, bash, subs="normal,attributes"]
+----
+$ cd landmark
+$ vim values.yaml
+----
+====== Change the Docker image values
+Modify the name of the values file with the image values with:
+[source, yaml, subs="normal,attributes"]
+----
+image:
+  repository: landmark
+  tag: "1.0"
+  pullPolicy: IfNotPresent
+----
+====== Add the PosgreSQL details
+Using the details from above you can parameterize the connection to the database:
+[source, yaml, subs="normal,attributes"]
+----
+postgresql:
+  server: landmark-db-postgresql
+  postgresqlUsername: landmark-default
+  secretName: landmark-db-postgresql
+  secretKey:  postgresql-password
+----
+====== Configure the health endpoints
+Every well designed application needs health checks and this why you should add the following:
+[source, yaml, subs="normal,attributes"]
+----
+readinessProbe:
+  path: /health/ready
+  initialDelaySeconds: 5
+  timeoutSeconds: 2
+  periodSeconds: 3
+  failureThreshold: 1
+
+
+livenessProbe:
+  path: /health/live
+  initialDelaySeconds: 10
+  timeoutSeconds: 2
+  periodSeconds: 8
+  failureThreshold: 1
+----
+
+====== Modify the service values
+You deployed application should be accessible from inside and outside the Openshift cluster.
+A Kubernetes Service of type NodePort will be used for this installation.
+
+Please change the service values that will expose your microservice:
+[source, yaml, subs="normal,attributes"]
+----
+service:
+  ports:
+    port: 8080
+    nodePort: 31125
+  type: NodePort
+----
+
+==== Modify the template associated with Deployment
+Navigate to _templates/deployment.yaml_.
+The keys associated to the values defined in _values.yaml_ need to be employed in corresponding templates.
+
+====== Modify the Docker image template
+
+Change the following:
+[source, yaml, subs="normal,attributes"]
+----
+image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+imagePullPolicy: {{ .Values.image.pullPolicy }}
+ports:
+  - name: http
+  containerPort: {{ .Values.image.containerPort }}
+----
+
+====== Add the PostgreSQL environment
+
+Add the following environment variables, defined in _values.yaml_
+
+[source, yaml, subs="normal,attributes"]
+----
+env:
+  - name: POSTGRES_SERVER
+    value: {{ .Values.postgresql.server | default (printf "%s-postgresql" ( .Release.Name )) | quote }}
+  - name: POSTGRES_USERNAME
+    value: {{ default "postgres" .Values.postgresql.postgresUsername | quote }}
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.postgresql.secretName | default (printf "%s-postgresql" ( .Release.Name )) | quote }}
+        key: {{ .Values.postgresql.secretKey }}
+----
+
+====== Modify the health endpoints
+The health endpoints need to adapted in order to use the keys defined in _values.yaml_.
+Change the health and readiness using the following:
+
+[source, yaml, subs="normal,attributes"]
+----
+readinessProbe:
+  httpGet:
+    path: {{ .Values.readinessProbe.path}}
+    port: {{ .Values.service.ports.port }}
+  initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds}}
+  timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds}}
+  periodSeconds: {{ .Values.readinessProbe.periodSeconds}}
+  failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+livenessProbe:
+  httpGet:
+    path: {{ .Values.livenessProbe.path}}
+    port: {{ .Values.service.ports.port }}
+  initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}
+  timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds}}
+  periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+  failureThreshold: {{ .Values.livenessProbe.failureThreshold}}
+----
+
+==== Modify the template associated to the Service
+Navigate to _templates/service.yaml_. and change the port and NodePort:
+
+[source, yaml, subs="normal,attributes"]
+----
+ports:
+  - port: {{ .Values.service.ports.port }}
+    nodePort: {{ .Values.service.ports.nodePort}}
+----
+
+=== Work with your modified charts
+Install your charts in default namespace
+
+[source, bash, subs="normal,attributes"]
+----
+$ helm install simple ./chart/landmark
+$ helm status simple
+$ kubectl get ns
+$ kubectl get svc
+$ kubectl port-forward --namespace dev svc/simple-landmark 8080
+----
+
+Go in a browser window and copy-paste http://localhost:8080/api/museum/muse
+
+*Congratulations*, you found a landmark!
+
+==== Replicate the installation in _qa_ project
+====== Step1
+
+According to Openshift documentation _a project is a Kubernetes namespace with additional annotations, and is the central vehicle by which access to resources for regular users is managed._
+This means that a project offers you the ability to deploy Helm charts without specifying the namespace.
+
+Create _qa_ project and install a PostgreSQL instance:
+
+[source, bash, subs="normal,attributes"]
+----
+$ oc new-project qa
+$ helm install landmark-db \
+--set postgresqlUsername=landmark-default,postgresqlPassword=postgres,postgresqlDatabase=landmark,persistence.enabled=false \
+stable/postgresql
+$ helm status landmark-db
+----
+
+====== Step2
+Duplicate the _values.yaml_ and rename it to _values.qa.yaml_.
+Change the NodePort value in _values.qa.yaml_ to 31126.
+Install the charts:
+[source, bash, subs="normal,attributes"]
+----
+$ helm install simple ./chart/landmark --values ./chart/landmark/values.qa.yaml
+$ helm status simple
+$ kubectl get ns
+$ kubectl get svc
+$ kubectl port-forward --namespace qa svc/simple-landmark 8080
+----
+Go in a browser window and copy-paste http://localhost:8080/api/museum/muse
+
+*Congratulations*, you found a landmark and replicated deployment process accros environments!
+
+In order to switch back to project dev, use the below command:
+[source, bash, subs="normal,attributes"]
+----
+$ oc project dev
+----
+
+=== Solution and more
+Blocked? Checkout the solution branch : https://github.com/ammbra/landmark/tree/solution/chart-per-service-lab
+
+Looking to validate your charts? Checkout the validation branch: https://github.com/ammbra/landmark/tree/validation/chart-per-service-lab
+
+
+|===
+|https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmarkp/tree/feature/leader-chart-lab[Navigate to next section]
+|===
+
+'''
+=== Compatibility
+
+The Java code in the repositories is compatible with Java11.
+
+'''
+=== License
+
+This code is dedicated to the public domain to the maximum extent permitted by applicable law, pursuant to http://creativecommons.org/publicdomain/zero/1.0/[CC0].
