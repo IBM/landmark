@@ -3,7 +3,7 @@
 * <<preparation, Preparation>>
 * <<helm-chart-setup-for-the-microservice, Helm chart setup for the microservice >>
 * <<install-leader-chart-for-landmark-microservice, Install leader chart for Landmark microservice >>
-** <<create-the-docker-image-for-landmark-microservice, Create the Docker image for Landmark Microservice>>
+** <<working-locally-with-the-docker-image-for-landmark-microservice,Working locally with the Docker image for Landmark Microservice>>
 ** <<create-the-helm-charts-for-landmark-microservice, Create the Helm charts for Landmark Microservice >>
 ** <<modify-values-yaml-file, Modify values.yaml file>>
 *** <<change-the-docker-image-values, Change the Docker image values>>
@@ -81,7 +81,7 @@ $ helm get all landmark-db
 Clone the repository https://github.com/ammbra/landmark[https://github.com/ammbra/landmark].
 Try to build the project locally using <<Run-Landmark-Microservice.adoc#, Run-Landmark-Microservice.adoc>>.
 
-==== Create the Docker image for Landmark Microservice
+==== Working locally with the Docker image for Landmark Microservice
 Make sure that you are under root folder of the clone repository (_landmark_) and run:
 [source, bash, subs="normal,attributes"]
 ----
@@ -117,7 +117,7 @@ Modify the name of the values file with the image values with:
 [source, yaml, subs="normal,attributes"]
 ----
 image:
-  repository: landmark
+  repository: ammbra/landmark
   tag: "1.0"
   pullPolicy: IfNotPresent
 ----
@@ -138,17 +138,17 @@ Every well designed application needs health checks and this why you should add 
 readinessProbe:
   path: /health/ready
   initialDelaySeconds: 5
-  timeoutSeconds: 2
+  timeoutSeconds: 3
   periodSeconds: 3
-  failureThreshold: 1
+  failureThreshold: 3
 
 
 livenessProbe:
   path: /health/live
-  initialDelaySeconds: 10
+  initialDelaySeconds: 30
   timeoutSeconds: 2
   periodSeconds: 8
-  failureThreshold: 1
+  failureThreshold: 3
 ----
 
 ====== Modify the service values
