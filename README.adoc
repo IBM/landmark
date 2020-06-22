@@ -1,7 +1,7 @@
 = Solution for Leader chart approach with Helm Charts in Openshift
 
 * <<preparation, Preparation>>
-** <<create-the-docker-image-for-landmark-microservice, Create the Docker image for Landmark Microservice>>
+** <<working-locally-with-the-docker-image-for-landmark-microservice,Working locally with the Docker image for Landmark Microservice>>
 * <<leader-helm-chart-setup,  Leader Helm chart setup>>
 * <<validation-and-more, Validation and more>>
 * <<compatibility,Compatibility>>
@@ -45,7 +45,7 @@ If the repo is not there, please run the following set of commands:
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
 ----
 
-==== Create the Docker image for Landmark Microservice
+==== Working locally with the Docker image for Landmark Microservice
 Clone the repository https://github.com/ammbra/landmark[https://github.com/ammbra/landmark]:
 
 [source, bash, subs="normal,attributes"]

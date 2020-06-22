@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: localhost:5000/quarkus/landmark
-  tag: "4.0"
+  repository: ammbra/landmark
+  tag: "1.0"
   pullPolicy: IfNotPresent
   containerPort: 8080
 
