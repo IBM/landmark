@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: localhost:5000/quarkus/landmark
+  repository: ammbra/landmark
   tag: "1.0"
   pullPolicy: IfNotPresent
   containerPort: 8080
@@ -22,10 +22,10 @@ postgresql:
 
 readinessProbe:
   path: /health/ready
-  initialDelaySeconds: 20
+  initialDelaySeconds: 5
   timeoutSeconds: 2
   periodSeconds: 3
-  failureThreshold: 1
+  failureThreshold: 3
 
 
 livenessProbe:
@@ -33,7 +33,7 @@ livenessProbe:
   initialDelaySeconds: 30
   timeoutSeconds: 2
   periodSeconds: 8
-  failureThreshold: 1
+  failureThreshold: 3
 
 serviceAccount:
   # Specifies whether a service account should be created
