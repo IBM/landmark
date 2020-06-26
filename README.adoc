@@ -68,7 +68,32 @@ $ docker push localhost:5000/quarkus/landmark:1.0
 ----
 
 === Leader Helm chart setup
-Observe the JSON schema used to validate the charts.
+Observe the JSON schema used to validate the charts:
+
+[source, bash, subs="normal,attributes"]
+----
+leader
+├── Chart.lock
+├── Chart.yaml
+├── charts
+│   ├── landmark
+│   │   ├── Chart.yaml
+│   │   ├── templates
+│   │   │   ├── NOTES.txt
+│   │   │   ├── _helpers.tpl
+│   │   │   ├── deployment.yaml
+│   │   │   ├── ingress.yaml
+│   │   │   ├── service.yaml
+│   │   │   ├── serviceaccount.yaml
+│   │   │   └── tests
+│   │   │       └── test-connection.yaml
+│   │   ├── values.schema.json
+│   │   └── values.yaml
+│   └── postgresql-8.6.4.tgz
+├── values.schema.json
+└── values.yaml
+----
+
 Install your charts in your current project:
 
 [source, bash, subs="normal,attributes"]
