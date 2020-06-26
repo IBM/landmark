@@ -104,6 +104,22 @@ Make sure that you are under root folder of the clone repository (_landmark_) an
 $ cd chart
 $ helm create landmark
 ----
+The above command generates the following structure:
+[source, bash, subs="normal,attributes"]
+----
+landmark
+├── Chart.yaml
+├── templates
+│   ├── NOTES.txt
+│   ├── _helpers.tpl
+│   ├── deployment.yaml
+│   ├── ingress.yaml
+│   ├── service.yaml
+│   ├── serviceaccount.yaml
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml
+----
 ==== Modify *_values.yaml_* file
 Go to the newly created charts and find the *values.yaml* file.
 You can use vim or your favorite IDE to edit its values.
