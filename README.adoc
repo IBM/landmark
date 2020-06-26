@@ -295,7 +295,7 @@ Looking to validate your charts? Checkout the validation branch: https://github.
 
 
 |===
-|https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmarkp/tree/feature/leader-chart-lab[Navigate to next section]
+|https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmark/tree/feature/leader-chart-lab[Navigate to next section]
 |===
 
 '''
