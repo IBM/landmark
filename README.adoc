@@ -89,8 +89,22 @@ Make sure that you are under root folder of the clone repository (_landmark_) an
 [source, bash, subs="normal,attributes"]
 ----
 $ helm create leader
+$ tree leader
+leader
+├── Chart.yaml
+├── templates
+│   ├── NOTES.txt
+│   ├── _helpers.tpl
+│   ├── deployment.yaml
+│   ├── ingress.yaml
+│   ├── service.yaml
+│   ├── serviceaccount.yaml
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml
 $ cd charts
 ----
+
 Remove the templates folder under leader because in this approach we will not use it.
 
 ==== Modify *_values.yaml_* file
