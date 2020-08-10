@@ -105,6 +105,7 @@ $ kubectl get ns
 $ kubectl port-forward --namespace qa svc/simple-landmark 8080
 ----
 Go in a browser window and copy-paste http://localhost:8080/api/museum/museum
+
 *Congratulations*, you found a landmark and replicated deployment process accros environments!
 
 In order to switch back to project dev, use the below command:
