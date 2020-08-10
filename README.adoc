@@ -1,6 +1,6 @@
 = Solution for chart per service approach with Helm Charts in Openshift
 
-:home: https://github.com/ammbra
+:home: https://github.com/IBM
 
 * <<preparation, Preparation>>
 * <<helm-chart-setup-for-the-microservice, Helm chart setup for the microservice >>
