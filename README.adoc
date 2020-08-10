@@ -1,5 +1,7 @@
 = Validation for Leader chart approach with Helm Charts in Openshift
 
+:home: https://github.com/ammbra
+
 * <<_preparation, Preparation>>
 ** <<working-locally-with-the-docker-image-for-landmark-microservice, Working locally with the Docker image for Landmark Microservice>>
 * <<leader-helm-chart-setup,  Leader Helm chart setup>>
@@ -43,10 +45,10 @@ $ helm repo add bitnami https://charts.bitnami.com/bitnami
 ----
 
 ==== Working locally with the Docker image for Landmark Microservice
-Clone the repository https://github.com/ammbra/landmark[https://github.com/ammbra/landmark].
+Clone the repository {home}/landmark.
 [source, bash, subs="normal,attributes"]
 ----
-$ git clone https://github.com/ammbra/landmark
+$ git clone {home}/landmark
 $ git checkout validation/leader-chart-lab
 $ git pull
 ----
@@ -111,7 +113,7 @@ Go in a browser window and copy-paste http://localhost:8080/api/museum/ams
 
 
 |===
-|https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmark/tree/solution/leader-chart-lab[Navigate to previous section] | https://github.com/ammbra/visitor[Navigate to next section]
+|{home}/helm-openshift-workshop[Navigate to global instructions] | {home}/landmark/tree/solution/leader-chart-lab[Navigate to previous section] | {home}/visitor[Navigate to next section]
 |===
 
 '''
