@@ -1,6 +1,6 @@
 = Validation for Leader chart approach with Helm Charts in Openshift
 
-:home: https://github.com/ammbra
+:home: https://github.com/IBM
 
 * <<_preparation, Preparation>>
 ** <<working-locally-with-the-docker-image-for-landmark-microservice, Working locally with the Docker image for Landmark Microservice>>
