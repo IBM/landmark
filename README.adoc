@@ -69,7 +69,7 @@ $ git checkout -b feature/leader-chart-lab
 $ git pull
 ----
 
-Try to build the project locally using {home}/landmark/Run-Landmark-Microservice.adoc[Run-Landmark-Microservice.adoc].
+Try to build the project locally using {home}/landmark/blob/feature/leader-chart-lab/Run-Landmark-Microservice.adoc[Run-Landmark-Microservice.adoc].
 
 Make sure that you are under root folder of the clone repository (_landmark_) and run:
 [source, bash, subs="normal,attributes"]
