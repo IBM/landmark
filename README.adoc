@@ -1,5 +1,7 @@
 = Chart per service approach with Helm Charts in Openshift
 
+:home: https://github.com/ammbra
+
 * <<preparation, Preparation>>
 * <<helm-chart-setup-for-the-microservice, Helm chart setup for the microservice >>
 * <<install-leader-chart-for-landmark-microservice, Install leader chart for Landmark microservice >>
@@ -78,7 +80,7 @@ $ helm get all landmark-db
 ----
 
 === Helm chart setup for the microservice
-Clone the repository https://github.com/ammbra/landmark[https://github.com/ammbra/landmark].
+Clone the landmark repository from {home}/landmark.
 Try to build the project locally using <<Run-Landmark-Microservice.adoc#, Run-Landmark-Microservice.adoc>>.
 
 ==== Working locally with the Docker image for Landmark Microservice
@@ -305,13 +307,13 @@ $ oc project dev
 ----
 
 === Solution and more
-Blocked? Checkout the solution branch : https://github.com/ammbra/landmark/tree/solution/chart-per-service-lab
+Blocked? Checkout the solution branch : {home}/landmark/tree/solution/chart-per-service-lab
 
-Looking to validate your charts? Checkout the validation branch: https://github.com/ammbra/landmark/tree/validation/chart-per-service-lab
+Looking to validate your charts? Checkout the validation branch: {home}/landmark/tree/validation/chart-per-service-lab
 
 
 |===
-|https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmark/tree/feature/leader-chart-lab[Navigate to next section]
+|{home}/helm-openshift-workshop[Navigate to global instructions] | {home}/landmark/tree/feature/leader-chart-lab[Navigate to next section]
 |===
 
 '''
