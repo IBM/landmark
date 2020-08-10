@@ -95,7 +95,7 @@ Go in a browser window and copy-paste http://localhost:8080/api/museum/ams
 Looking to validate your charts? Checkout the validation branch: {home}/landmark/tree/validation/leader-chart-lab
 
 |===
-|{home}/helm-openshift-workshop[Navigate to global instructions] | {home}/landmark/tree/feature/chart-per-service-lab[Navigate to previous section] | {home}/visitor[Navigate to next section]
+|{home}/helm-openshift-workshop[Navigate to global instructions] | {home}/landmark[Navigate to previous section] | {home}/visitor[Navigate to next section]
 |===
 
 '''
