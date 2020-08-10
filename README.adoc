@@ -1,5 +1,7 @@
 = Solution for chart per service approach with Helm Charts in Openshift
 
+:home: https://github.com/ammbra
+
 * <<preparation, Preparation>>
 * <<helm-chart-setup-for-the-microservice, Helm chart setup for the microservice >>
 ** <<replicate-the-installation-in-qa-project, Replicate the installation in qa project>>
@@ -130,11 +132,11 @@ $ oc project dev
 === Validation and more
 
 Looking to validate your charts? 
-Checkout the validation branch: https://github.com/ammbra/landmark/tree/validation/chart-per-service-lab
+Checkout the validation branch: {home}/landmark/tree/validation/chart-per-service-lab
 
 
 |===
-|https://github.com/ammbra/helm-openshift-workshop[Navigate to global instructions] | https://github.com/ammbra/landmark[Navigate to previous section] | https://github.com/ammbra/landmark/tree/feature/leader-chart-lab[Navigate to next section]
+|{home}/helm-openshift-workshop[Navigate to global instructions] | {home}/landmark[Navigate to previous section] | {home}/landmark/tree/feature/leader-chart-lab[Navigate to next section]
 |===
 
 '''
